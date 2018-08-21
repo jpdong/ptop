@@ -15,14 +15,14 @@ public class UDPServer {
 
     List<Address> addressList;
 
-    public UDPServer(){
+    public UDPServer(int serverPort){
         addressList = new ArrayList<>();
         Gson gson = new GsonBuilder()
                 //.setPrettyPrinting()
                 .create();
         DatagramPacket receivePacket = null;
         try {
-            MulticastSocket multicastSocket = new MulticastSocket(8334);
+            MulticastSocket multicastSocket = new MulticastSocket(serverPort);
             while (true) {
                 System.out.println("listenning...");
 
@@ -36,7 +36,8 @@ public class UDPServer {
                 }
                 String timeStamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
                 System.out.println(timeStamp + " server receive:" + address.toString());
-                System.out.println(timeStamp + " server receive:" + new String(receivePacket.getData()));
+                System.out.println(timeStamp + " server receive:" + receivePacket.getData().length);
+                System.out.println(timeStamp + " server receive:" + new String(receivePacket.getData()).trim());
                 List<Address> backList = new ArrayList<>();
                 for (Address addr : addressList) {
                     if (addr.equals(address)) {
@@ -57,7 +58,13 @@ public class UDPServer {
 
     }
 
-    public static void main(String[] args) {
-        UDPServer server = new UDPServer();
-    }
+    /*public static void main(String[] args) {
+        //UDPServer server = new UDPServer(Integer.valueOf(args[0]));
+        if (args != null && args.length != 0) {
+            UDPServer server = new UDPServer(Integer.valueOf(args[0]));
+        } else {
+            UDPServer server = new UDPServer(Integer.valueOf("8334"));
+        }
+        //UDPServer server = new UDPServer(Integer.valueOf("8334"));
+    }*/
 }
